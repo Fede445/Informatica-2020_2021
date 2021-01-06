@@ -1,8 +1,0 @@
-site_name: Federico_Bertoncini
-
-nav:
-
-    - 'MD': 'index.md'
-    - 'Test': 'test.txt'
-theme:
-    name: readthedocs
