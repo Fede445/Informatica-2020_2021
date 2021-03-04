@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-if ($_SESSION["reset"] === true) {
+if ((!isset($_SESSION["reset"])) || $_SESSION["reset"] === true) {
     $_SESSION["attempts"] = 3;
     $_SESSION["n"] = rand(1, 10);
     $_SESSION["reset"] = false;

@@ -5,13 +5,16 @@ require_once "config.php";
 // Define variables and initialize with empty values
 $email = $password = $confirm_password = "";
 $email_err = $password_err = $confirm_password_err = "";
- 
+$temp = "";
+
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
  
     // Validate email
     if (empty(trim($_POST["email"]))) {
-        $email_err = "Perfavore, inserire una email.";
+        $email_err = "Per favore, inserire una email.";
+    } elseif (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
+        $email_err = "Per favore, inserire una email valida.";
     } else {
         // Prepare a select statement
         $sql = "SELECT id FROM users WHERE email = ?";
@@ -42,20 +45,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    $password = trim(_POST["password"]);
-
-    $uppercase = preg_match('@[A-Z]@', $password);
-    $lowercase = preg_match('@[a-z]@', $password);
-    $number    = preg_match('@[0-9]@', $password);
-    $specialChars = preg_match('@[^\w]@', $password);
+    $uppercase = preg_match('@[A-Z]@', trim($_POST["password"]));
+    $lowercase = preg_match('@[a-z]@', trim($_POST["password"]));
+    $number    = preg_match('@[0-9]@', trim($_POST["password"]));
+    $specialChars = preg_match('@[^\w]@', trim($_POST["password"]));
     
     // Validate password
-    if (empty($password)) {
+    if (empty(trim($_POST["password"]))) {
         $password_err = "Per favore, inserire una password.";
-    } elseif (!$uppercase || !$lowercase || !$number || !$specialChars || strlen($password) < 8) {
+    } elseif (!$uppercase || !$lowercase || !$number || !$specialChars || strlen(trim($_POST["password"])) < 8) {
         $password_err = "La password deve avere almeno 8 caratteri, avere almeno una lettera maiuscola, un numero e un carattere speciale.";
     } else {
-        $password = $password;
+        $password = trim($_POST["password"]);
     }
     
     // Validate confirm password
@@ -167,14 +168,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   </div>
                   <div class="aa-single-field">
                     <label for="password">Password <span class="required">*</span></label>
-                    <input type="password" name="password" class="form-control"
-                      value="<?php echo $password; ?>">
+                    <input type="password" name="password" class="form-control" value="">
                     <span class="help-block"><?php echo $password_err; ?></span>
                   </div>
                   <div class="aa-single-field">
-                    <label for="confirm-password">Conferma Password <span class="required">*</span></label>
-                    <input type="password" name="confirm-password" class="form-control"
-                      value="<?php echo $confirm_password; ?>">
+                    <label for="confirm_password">Conferma Password <span class="required">*</span></label>
+                    <input type="password" name="confirm_password" class="form-control" value="">
                     <span class="help-block"><?php echo $confirm_password_err; ?></span>
                   </div>
                   <div class="aa-single-submit">
